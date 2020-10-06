@@ -71,24 +71,23 @@ contract Betting {
         uint256 LoserBet = 0;
         uint256 WinnerBet = 0;
         address payable playerAddress;
-        // uint256 gameWinner;
+
 
 
         gameWinner = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 2;
 
-        //We loop through the player array to check who selected the winner team
+
         for(uint256 i = 0; i < players.length; i++){
             playerAddress = players[i];
 
-         //If the player selected the winner team
-         //We add his address to the winners array
+
          if(playerInfo[playerAddress].choice == gameWinner){
             winners[count] = playerAddress;
             count++;
          }
       }
 
-        //We define which bet sum is the Loser one and which one is the winner
+
         if ( gameWinner == 1){
              LoserBet = totalBetsTwo;
             WinnerBet = totalBetsOne;
@@ -99,19 +98,19 @@ contract Betting {
         }
 
 
-      //We loop through the array of winners, to give ethers to the winners
+      //Loop through winners
         for(uint256 j = 0; j < count; j++){
-              // Check that the address in this fixed array is not empty
+              // Check that the address is not empty
             if(winners[j] != address(0)){
                 address add = winners[j];
                 uint256 bet = playerInfo[add].amountBet;
-                //Transfer the money to the user
+                //Transfer the money
                 winners[j].transfer((bet*(10000+(LoserBet*10000/WinnerBet)))/10000);
         }
 
-        delete playerInfo[playerAddress]; // Delete all the players
-        players.length = 0; // Delete all the players array
-        LoserBet = 0; //reinitialize the bets
+        delete playerInfo[playerAddress];
+        players.length = 0;
+        LoserBet = 0;
         WinnerBet = 0;
         totalBetsOne = 0;
         totalBetsTwo = 0;
